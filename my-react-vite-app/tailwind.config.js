@@ -7,11 +7,11 @@ export default {
   theme: {
     extend: {
       colors: {
-        "copy": "#c026d3",
+        "copy": "#405D72",
         "my-purple": "#6366f1",
         "my-green": "#16a34a",
-        "prp":"#0f172a",
-        "card":"#1e293b",
+        "prp":"#758694",
+        "card":"#78ABA8",
         "text":"#10b981",
         "headerbg":"#7e22ce"
 
