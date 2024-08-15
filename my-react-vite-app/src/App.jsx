@@ -11,21 +11,20 @@ export default function TodoWrapper() {
     JSON.parse(localStorage.getItem("items")) ?? []
   );
   const [indexEdit, setIsEditedIndex] = useState(-1);
-  const [showInputFields, setShowInputFields] = useState(false); 
+  const [showInputFields, setShowInputFields] = useState(false);
+
   const handleEditing = (index) => {
     setIsEditedIndex(index);
   };
 
   const handleClick = () => {
     if (title !== "" && desc !== "") {
-      setItems([...items, { title, desc }]);
-      localStorage.setItem(
-        "items",
-        JSON.stringify([...items, { title, desc }])
-      );
+      const newItems = [...items, { title, desc }];
+      setItems(newItems);
+      localStorage.setItem("items", JSON.stringify(newItems));
       setDesc("");
       setTitle("");
-      setShowInputFields(false); 
+      setShowInputFields(false);
     }
   };
 
@@ -33,38 +32,38 @@ export default function TodoWrapper() {
     const updatedItems = [...items];
     updatedItems.splice(index, 1);
     setItems(updatedItems);
+    localStorage.setItem("items", JSON.stringify(updatedItems));
   };
 
   const handleEditCard = (localData) => {
     const updatedItems = [...items];
     updatedItems[indexEdit] = localData;
     setItems(updatedItems);
+    localStorage.setItem("items", JSON.stringify(updatedItems));
     setIsEditedIndex(-1);
   };
 
   return (
     <div className="header-container-to-do w-full min-h-[400px]">
-      <div>
-        <Headering />
-      </div>
+      <Headering />
 
-      <div >
-        {!showInputFields ? (
-          <div
-            onClick={() => setShowInputFields(true)}
-            className="flex justify-center flex-col items-center w-[320px] h-[180px] bg-gray-200 rounded-lg mt-7  ml-3  border-2 border-black cursor-pointer hover:bg-blue-600"
-          >
+      <div className="flex justify-evenly flex-row  items-start mt-7 ml-3">
+        <div
+          onClick={() => setShowInputFields(!showInputFields)}
+          className="w-[320px] h-[180px] bg-gray-200 rounded-lg border-2 cursor-pointer hover:bg-blue-600"
+        >
+          <div className="flex flex-col justify-center items-center  h-full">
             <span className="text-6xl text-gray-600">+</span>
-            <span className="text-xl text-gray-600">add new to do </span>
-            
+            <span className="text-xl text-gray-600">Add new to do</span>
           </div>
-        ) : (
-          <>
+        </div>
+        {showInputFields && (
+          <div className="mt-5 w-[320px] bg-gray-100  p-4 rounded-lg border-2 border-black">
             <TodoInput value={title} onHouari={setTitle} placeholder="Title" />
             <TodoInput value={desc} onHouari={setDesc} placeholder="Description" />
             <button
               onClick={handleClick}
-              className="bg-my-green py-2 text-white px-8 rounded-sm mt-5 mb-5"
+              className="bg-my-green py-2 text-white px-8 rounded-sm mt-5"
             >
               Add
             </button>
@@ -74,16 +73,16 @@ export default function TodoWrapper() {
             >
               Cancel
             </button>
-          </>
+          </div>
         )}
       </div>
 
       <div className="content-container-card w-full min-h-[400px]">
-        <ul className=" ml-7 grid sm:grid-cols-1 md:grid-cols-3 gap-5">
+        <ul className="ml-7 grid sm:grid-cols-1 md:grid-cols-3 gap-5">
           {items.map((item, index) => (
             <li key={index} className="col-span-1">
               <TodoItem
-                edit={indexEdit === index ? true : false}
+                edit={indexEdit === index}
                 title={item.title}
                 desc={item.desc}
                 onDelete={() => handleDelete(index)}
@@ -95,9 +94,7 @@ export default function TodoWrapper() {
         </ul>
       </div>
 
-      <div>
-        <Footer />
-      </div>
+      <Footer />
     </div>
   );
 }
